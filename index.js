@@ -7,7 +7,18 @@ const server = http.createServer(app)
 const path = require('path')
 const PORT = process.env.PORT || 3000
 const { Server } = require("socket.io");
-const io = new Server(server)
+const io = new Server(server, {
+    cors: {
+        origin: '*', 
+        methods: ['GET', 'POST']
+    },
+    cookie: {
+        name: 'session',
+        httpOnly: true,
+        maxAge: 8640000
+    },
+    connectTimeout: 50000
+})
 
 let games = {}
 
