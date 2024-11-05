@@ -5,26 +5,38 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
-    <title>Math Race</title>
+    <title>Dreambound</title>
 </head>
 <body>
     <div class="container">
-        <h1>Math Racer</h1>
-        <p class="info">A multiplayer game where you move forward my sovling Math Eqations.</p>
-        <a class="btn" href="/new">New race</a>
-        <p class="or">or</p>
+        <h1>Dreambound</h1>
+        <p class="info">Un juego multijugador en el que avanzas mis sovling Ecuaciones Matemáticas.</p>
+        <a class="btn new-btn" href="/new">Nueva carrera</a>
+        <p class="or">o</p>
         <div class="input-group">
-            <input type="text" placeholder="Join code">
-            <button class="btn join-btn">join</button>
+            <input type="text" id="input-name" placeholder="Ingresa tu nombre" required>
+            <input type="text" id="join-code" placeholder="Ingresa el codigo" required>
+            <button class="btn join-btn">Ingresar</button>
         </div>
     </div>
 
     <script>
-        var input = document.querySelector("input")
+
+        var newBtn = document.querySelector(".new-btn");
+        var input = document.querySelector("#join-code")
+        var inputName = document.querySelector("#input-name")
         var joinBtn = document.querySelector(".join-btn")
+
+        
+        inputName.addEventListener('change', ()=>{            
+            newBtn.setAttribute("href", `/new?user_name=` + inputName.value.trim())
+        })
+
         joinBtn.addEventListener('click', function(){
+            console.log(input);
+            
             if(!input.value.trim()) return
-            window.location = "/game/" + input.value.trim()
+            window.location = "/game/" + input.value.trim() + "?user_name=" + inputName.value.trim()
         })
     </script>
 </body>

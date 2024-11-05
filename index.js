@@ -1,4 +1,5 @@
 const { LOADIPHLPAPI } = require('dns')
+const e = require('express')
 const express = require('express')
 const app = express()
 const http = require('http')
@@ -15,10 +16,8 @@ io.on('connection', (socket) => {
         if(!games[gameId]){
             games[gameId] = []
         }else{
-            //inform new racer about existing racers
             socket.emit("joined-racers", games[gameId])
         }
-        //inform existing racers about new racer
         games[gameId].map(racerId => {
             io.sockets.sockets.get(racerId).emit("joined-racers", [socket.id])
         })
@@ -26,12 +25,14 @@ io.on('connection', (socket) => {
         games[gameId].push(socket.id)
     })
 
-    socket.on("current-user-answered", ({ answered, gameId }) => {
+    socket.on("current-user-answered", ({ answered, gameId, carId, userName }) => {
         games[gameId].map(racerId => {
             if(racerId == socket.id) return
             io.sockets.sockets.get(racerId).emit("racer-answered", {
                 answered,
-                racerId: socket.id
+                racerId: socket.id,
+                carId,
+                userName
             })
         })
     })
@@ -55,9 +56,8 @@ app.get('/', (req, res) => {
 })
 
 app.get('/new', (req, res) => {
-    //generate random id consisting letters and numbers
     const id = Math.random().toString(36).substr(2, 9)
-    res.redirect(`/game/${id}`)
+    res.redirect(`/game/${id}?user_name=${req.query.user_name}`)
 })
 
 app.get('/game/:id', (req, res) => {
